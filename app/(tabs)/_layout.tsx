@@ -1,25 +1,20 @@
 import { icons } from "@/constants/icons";
-import { images } from "@/constants/images";
 import { Tabs } from "expo-router";
 import React from "react";
-import { Image, ImageBackground, StyleSheet, Text, View } from "react-native";
+import { Image, View } from "react-native";
 
 const TabIcon = ({ focused, icon, title }: any) => {
   if (focused) {
     return (
-      <ImageBackground
-        source={images.highlight}
-        className="flex flex-row w-full flex-1 min-w-[112px] min-h-16 mt-4 justify-center items-center rounded-full overflow-hidden"
-      >
-        <Image source={icon} tintColor="#151312" className="size-5" />
-        <Text style={styles.tabText}>{title}</Text>
-      </ImageBackground>
+      <View className="flex flex-col items-center justify-center px-10 py-5 bg-accent rounded-full">
+        <Image source={icon} tintColor="#FFFFFF" className="size-6" />
+      </View>
     );
   }
 
   return (
-    <View className="size-full justify-center items-center mt-4 rounded-full">
-      <Image source={icon} tintColor="#A8B5DB" className="size-5"></Image>
+    <View className="flex flex-col items-center justify-center">
+      <Image source={icon} tintColor="#9CA4AB" className="size-5" />
     </View>
   );
 };
@@ -30,29 +25,38 @@ const _layout = () => {
       screenOptions={{
         tabBarShowLabel: false,
         tabBarItemStyle: {
-          width: "100%",
-          height: "100%",
+          flex: 1,
+          height: 56,
           justifyContent: "center",
-          alignItems: "center"
+          alignItems: "center",
+          paddingVertical: 8,
         },
         tabBarStyle: {
-          backgroundColor: "#0f0d23",
-          borderRadius: 50,
-          marginHorizontal: 20,
-          marginBottom: 36,
-          height: 52,
+          backgroundColor: "#0F0D23",
+          borderRadius: 28,
+          marginHorizontal: 16,
+          marginBottom: 32,
+          height: 56,
           position: "absolute",
           overflow: "hidden",
           borderWidth: 1,
-          borderColor: "#0f0d23"
+          borderColor: "#221F3D",
+          paddingHorizontal: 8,
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: 4,
+          },
+          shadowOpacity: 0.3,
+          shadowRadius: 8,
+          elevation: 8,
         }
       }}
     >
-      {/* Hide specific screen header */}
       <Tabs.Screen
-        name="index" // File name
+        name="index"
         options={{
-          title: "Home", // Name display on tab list
+          title: "Home",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
             <TabIcon focused={focused} icon={icons.home} title="Home" />
@@ -94,12 +98,3 @@ const _layout = () => {
 };
 
 export default _layout;
-
-const styles = StyleSheet.create({
-  tabText: {
-    color: "#151312",
-    fontSize: 16,
-    fontWeight: "700", // font-semibold
-    marginLeft: 5,
-  },
-});
