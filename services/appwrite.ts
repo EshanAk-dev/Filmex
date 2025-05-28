@@ -11,6 +11,9 @@ const client = new Client()
 const database = new Databases(client);
 
 export const updateSearchCount = async (query: string, movie: Movie) => {
+  // Check if record of that search has already been stored in appwrite
+  // If a document is found increase the searchCount
+  // If no document is found create a new document in app write with count = 1
   try {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
       Query.equal("searchTerm", query),
@@ -42,8 +45,18 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
     console.log(error);
     throw error;
   }
+};
 
-  // Check if record of that search has already been stored in appwrite
-  // If a document is found increase the searchCount
-  // If no document is found create a new document in app write with count = 1
+export const getTrendingMovies = async (): Promise<TrendingMovie[] | undefined> => {
+  try {
+    const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
+      Query.limit(10),
+      Query.orderDesc("count"), // Display top search count movies
+    ]);
+
+    return result.documents as unknown as TrendingMovie[];
+  } catch (error) {
+    console.log(error);
+    return undefined;
+  }
 };

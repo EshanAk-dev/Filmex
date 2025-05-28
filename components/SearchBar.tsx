@@ -4,14 +4,14 @@ import { Image, StyleSheet, TextInput, View } from "react-native";
 
 interface Props {
   placeholder: string;
-  value: string;
+  value?: string; // In thi ? make these optional
   onPress?: () => void;
-  onChangeText: (text: string) => void;
+  onChangeText?: (text: string) => void;
 } // Tells whats are the types of props
 
 const SearchBar = ({ placeholder, onPress, value, onChangeText }: Props) => {
   return (
-    <View className="flex-row items-center bg-dark-200 rounded-full px-5 py-4">
+    <View className="flex-row items-center bg-dark-200 rounded-full px-5 py-1.5">
       <Image
         source={icons.search}
         className="size-5"

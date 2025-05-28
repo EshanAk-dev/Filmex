@@ -31,16 +31,19 @@ const Search = () => {
       if (searchQuery.trim()) {
         // Refetch movies when search query changes
         await loadMovies();
-        if (movies?.length > 0 && movies?.[0]) {
-          await updateSearchCount(searchQuery, movies[0]);
-        }
       } else {
         reset();
       }
-    }, 500); // Wait 500ms to next key stroke. (Reduce API calls)
+    }, 1000); // Wait 1s to next key stroke. (Reduce API calls)
 
     return () => clearTimeout(timeoutId);
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (movies?.length > 0 && movies?.[0]) {
+      updateSearchCount(searchQuery, movies[0]);
+    }
+  }, [movies]); // Update count when search movies change
 
   return (
     <View className="flex-1 bg-primary">
@@ -58,7 +61,7 @@ const Search = () => {
         numColumns={3}
         columnWrapperStyle={{
           justifyContent: "center",
-          gap: 16,
+          gap: 15,
           marginVertical: 16,
         }}
         contentContainerStyle={{
@@ -75,7 +78,7 @@ const Search = () => {
               <SearchBar
                 value={searchQuery}
                 onChangeText={(text) => setSearchQuery(text)}
-                placeholder="Search Movies"
+                placeholder="Search movies"
               />
             </View>
 
