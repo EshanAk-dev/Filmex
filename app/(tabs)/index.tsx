@@ -92,7 +92,7 @@ export default function Index() {
                   marginBottom: 10,
                 }}
                 className="mt-2 pb-32"
-                scrollEnabled={false}
+                scrollEnabled={false} // Let ScollView to do its job
               />
             </>
           </View>

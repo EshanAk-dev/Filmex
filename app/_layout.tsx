@@ -6,7 +6,7 @@ export default function RootLayout() {
     <Stack>
       {/* Hide group headers */}
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} /> 
-      <Stack.Screen name="movie/[id]" options={{ headerShown: false }} />
+      <Stack.Screen name="movies/[id]" options={{ headerShown: false }} />
     </Stack>
   );
 }
