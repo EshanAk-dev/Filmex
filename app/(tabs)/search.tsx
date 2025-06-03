@@ -1,7 +1,5 @@
 import MovieCard from "@/components/MovieCard";
 import SearchBar from "@/components/SearchBar";
-import { icons } from "@/constants/icons";
-import { images } from "@/constants/images";
 import { fetchMovies } from "@/services/api";
 import { updateSearchCount } from "@/services/appwrite";
 import useFetch from "@/services/useFetch";
@@ -9,7 +7,6 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   StyleSheet,
   Text,
   View,
@@ -47,12 +44,6 @@ const Search = () => {
 
   return (
     <View className="flex-1 bg-primary">
-      <Image
-        source={images.bg}
-        className="flex-1 absolute w-full z-0"
-        resizeMode="cover"
-      />
-
       <FlatList
         data={movies}
         renderItem={({ item }) => <MovieCard {...item} />}
@@ -70,11 +61,7 @@ const Search = () => {
         // Display top of the list
         ListHeaderComponent={
           <>
-            <View className="w-full flex-row justify-center mt-20 items-center">
-              <Image source={icons.logo} className="w-20 h-20" />
-            </View>
-
-            <View className="my-5">
+            <View className="mt-20 mb-10">
               <SearchBar
                 value={searchQuery}
                 onChangeText={(text) => setSearchQuery(text)}

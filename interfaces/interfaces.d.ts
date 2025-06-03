@@ -21,6 +21,9 @@ interface TrendingMovie {
   title: string;
   count: number;
   poster_url: string;
+  original_language: string;
+  vote_average: number;
+  release_date: string;
 }
 
 interface MovieDetails {

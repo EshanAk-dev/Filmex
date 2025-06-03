@@ -15,28 +15,33 @@ const MovieCard = ({
   return (
     <Link href={`/movies/${id}`} asChild>
       <TouchableOpacity className="w-[30%]">
-        <Image
-          source={
-            poster_path
-              ? { uri: `https://image.tmdb.org/t/p/w500${poster_path}` }
-              : placeholderImage
-          }
-          className="w-full h-52 rounded-lg"
-          resizeMode="cover"
-        />
+        <View className="relative">
+          <Image
+            source={
+              poster_path
+                ? { uri: `https://image.tmdb.org/t/p/w500${poster_path}` }
+                : placeholderImage
+            }
+            className="w-full h-52 rounded-lg"
+            resizeMode="cover"
+          />
+          
+          {/* Vote Average Badge */}
+          <View className="absolute top-2 right-2 bg-black/70 rounded-full px-2 py-1 flex-row items-center">
+            <Image source={icons.star} className="size-3 mr-1" tintColor="#FFD700" />
+            <Text className="text-xs text-white font-bold">
+              {vote_average.toFixed(1)}
+            </Text>
+          </View>
+        </View>
+
         {/* Display movie title with a maximum of one line */}
-        <Text className="text-sm font-bold text-white" numberOfLines={1}>
+        <Text className="text-sm font-bold text-white mt-2" numberOfLines={1}>
           {title}
         </Text>
-
-        <View className="flex-row items-center justify-start gap-x-1">
-          <Image source={icons.star} className="size-4" />
-          <Text className="text-xs text-white font-bold uppercase">
-            {vote_average.toFixed(1)}
-          </Text>
-        </View>
-        <View className="flex-row items-center justify-between">
-          <Text className="text-xs text-light-300 font-medium mt-1">
+        
+        <View className="flex-row items-center justify-between mt-1">
+          <Text className="text-xs text-light-300 font-medium">
             {release_date?.split("-")[0] || "N/A"}{" "}
             {/* Display year from release_date */}
           </Text>
