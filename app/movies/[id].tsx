@@ -1,117 +1,294 @@
 import placeholderImage from "@/assets/images/placeholder.png";
-import { icons } from "@/constants/icons";
 import { fetchMovieDetails } from "@/services/api";
 import useFetch from "@/services/useFetch";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 import { router, useLocalSearchParams } from "expo-router";
-import React from "react";
+import React, { useState } from "react";
 import {
+  ActivityIndicator,
+  Animated,
+  Dimensions,
   Image,
-  ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 
+const { width, height } = Dimensions.get("window");
+
 // Interface for movie info component
 interface MovieInfoProps {
   label: string;
   value?: string | number | null;
+  icon?: keyof typeof Ionicons.glyphMap;
 }
 
-// Reusable component to display title and content
-const MovieInfo = ({ label, value }: MovieInfoProps) => (
-  <View className="flex-col items-start justify-center mt-5 ">
-    <Text className="text-light-200 font-normal text-base">{label}</Text>
-    <Text className="text-light-100 font-normal text-base mt-2">
-      {value || "N/A"}
+// Info card component
+const InfoCard = ({ label, value, icon }: MovieInfoProps) => (
+  <View className="bg-dark-100/50 rounded-xl p-4 mb-3 border border-dark-100">
+    <View className="flex-row items-center mb-2">
+      {icon && (
+        <Ionicons name={icon} size={16} color="#AB8BFF" className="mr-2" />
+      )}
+      <Text className="text-accent text-sm font-semibold uppercase tracking-wide">
+        {label}
+      </Text>
+    </View>
+    <Text className="text-white text-base leading-6">{value || "N/A"}</Text>
+  </View>
+);
+
+// Statistics card component
+const StatCard = ({
+  title,
+  value,
+  subtitle,
+}: {
+  title: string;
+  value: string;
+  subtitle?: string;
+}) => (
+  <View className="bg-dark-100/50 rounded-xl p-4 flex-1 border border-dark-100">
+    <Text className="text-accent text-xs font-semibold uppercase tracking-wide mb-1">
+      {title}
     </Text>
+    <Text className="text-white text-lg font-bold">{value}</Text>
+    {subtitle && (
+      <Text className="text-light-300 text-xs mt-1">{subtitle}</Text>
+    )}
   </View>
 );
 
 const MovieDetails = () => {
   const { id } = useLocalSearchParams();
-
+  const [scrollY] = useState(new Animated.Value(0));
   const { data: movie, loading } = useFetch(() =>
     fetchMovieDetails(id as string)
   );
 
+  const headerOpacity = scrollY.interpolate({
+    inputRange: [0, 200],
+    outputRange: [0, 1],
+    extrapolate: "clamp",
+  });
+
+  const imageScale = scrollY.interpolate({
+    inputRange: [-100, 0],
+    outputRange: [1.2, 1],
+    extrapolate: "clamp",
+  });
+
+  const formatBudget = (budget: number) => {
+    if (budget >= 1000000) {
+      return `$${(budget / 1000000).toFixed(1)}M`;
+    }
+    return `$${(budget / 1000).toFixed(0)}K`;
+  };
+
+  if (loading) {
+    return (
+      <View className="flex-1 bg-primary items-center justify-center">
+        <ActivityIndicator size="large" color="#AB8BFF" />
+        <Text className="text-light-300 mt-4 text-base">
+          Loading movie details...
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <View className="bg-primary flex-1">
-      <ScrollView
-        contentContainerStyle={{
-          paddingBottom: 80,
-        }}
+      <StatusBar
+        barStyle="light-content"
+        translucent
+        backgroundColor="transparent"
+      />
+
+      {/* Header */}
+      <Animated.View
+        style={{ opacity: headerOpacity }}
+        className="absolute top-0 left-0 right-0 z-20 bg-primary/95 pt-12 pb-4 px-5 border-b border-dark-100"
       >
-        <View>
-          <Image
-            source={
-            movie?.poster_path
-              ? { uri: `https://image.tmdb.org/t/p/w500${movie?.poster_path}` }
-              : placeholderImage
-          }
-            className="w-full h-[550px]"
-            resizeMode="stretch"
+        <View className="flex-row items-center justify-between">
+          <TouchableOpacity
+            onPress={router.back}
+            className="bg-dark-100/80 rounded-full p-2"
+          >
+            <Ionicons name="arrow-back" size={20} color="white" />
+          </TouchableOpacity>
+          <Text
+            className="text-white font-bold text-lg flex-1 ml-4"
+            numberOfLines={1}
+          >
+            {movie?.title}
+          </Text>
+        </View>
+      </Animated.View>
+
+      <Animated.ScrollView
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: false }
+        )}
+        scrollEventThrottle={16}
+        contentContainerStyle={{ paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Hero Section with Poster */}
+        <View className="relative">
+          <Animated.View style={{ transform: [{ scale: imageScale }] }}>
+            <Image
+              source={
+                movie?.poster_path
+                  ? {
+                      uri: `https://image.tmdb.org/t/p/original${movie?.poster_path}`,
+                    }
+                  : placeholderImage
+              }
+              className="w-full h-[600px]"
+              resizeMode="cover"
+            />
+          </Animated.View>
+
+          {/* Gradient Overlay */}
+          <LinearGradient
+            colors={["transparent", "rgba(3, 0, 20, 0.8)", "#030014"]}
+            className="absolute bottom-0 left-0 right-0 h-40"
           />
+
+          {/* Back Button */}
+          <TouchableOpacity
+            onPress={router.back}
+            className="absolute top-12 left-5 bg-black/50 rounded-full p-3"
+          >
+            <Ionicons name="arrow-back" size={20} color="white" />
+          </TouchableOpacity>
+
+          {/* Bookmark Button */}
+          <TouchableOpacity className="absolute top-12 right-5 bg-black/50 rounded-full p-3">
+            <Ionicons name="bookmark-outline" size={20} color="white" />
+          </TouchableOpacity>
         </View>
 
-        <View className="flex-col items-start justify-center mt-5 px-5">
-          <Text className="text-white font-bold text-xl">{movie?.title}</Text>
-
-          <View className="flex-row items-center mt-1 gap-x-3">
-            <Text className="text-light-200 text-sm">
-              {movie?.release_date?.split("-")[0]}
+        {/* Movie Info Section */}
+        <View className="px-5 -mt-20 relative z-10">
+          {/* Title and Basic Info */}
+          <View className="mb-6">
+            <Text className="text-white font-bold text-3xl mb-3 leading-tight">
+              {movie?.title}
             </Text>
-            <Text className="text-light-200 text-sm">{movie?.runtime}min</Text>
+
+            {/* Meta Info Row */}
+            <View className="flex-row items-center flex-wrap gap-4 mb-4">
+              <View className="flex-row items-center bg-dark-100/50 rounded-full px-3 py-1">
+                <Ionicons name="calendar-outline" size={14} color="#9CA4AB" />
+                <Text className="text-light-300 text-sm ml-1">
+                  {movie?.release_date?.split("-")[0]}
+                </Text>
+              </View>
+
+              <View className="flex-row items-center bg-dark-100/50 rounded-full px-3 py-1">
+                <Ionicons name="time-outline" size={14} color="#9CA4AB" />
+                <Text className="text-light-300 text-sm ml-1">
+                  {movie?.runtime}min
+                </Text>
+              </View>
+
+              <View className="flex-row items-center bg-accent/20 rounded-full px-3 py-1">
+                <Ionicons name="star" size={14} color="#AB8BFF" />
+                <Text className="text-accent font-bold text-sm ml-1">
+                  {movie?.vote_average?.toFixed(1)}/10
+                </Text>
+              </View>
+            </View>
+
+            {/* Genres */}
+            <View className="flex-row flex-wrap gap-2">
+              {movie?.genres?.map((genre, index) => (
+                <View
+                  key={index}
+                  className="bg-accent/10 border border-accent/30 rounded-full px-3 py-1"
+                >
+                  <Text className="text-accent text-xs font-medium">
+                    {genre.name}
+                  </Text>
+                </View>
+              ))}
+            </View>
           </View>
 
-          <View className="flex-row items-center mt-1 bg-dark-100 px-2 py-1 rounded-md gap-x-1">
-            <Image source={icons.star} className="size-4" />
-            <Text className="text-white font-bold">
-              {movie?.vote_average.toFixed(1) ?? 0}/10
-            </Text>
-            <Text className="text-light-200 text-sm">
-              ({movie?.vote_count} votes)
-            </Text>
+          {/* Rating and Stats */}
+          <View className="flex-row gap-3 mb-6">
+            <StatCard
+              title="Rating"
+              value={`${movie?.vote_average?.toFixed(1)}/10`}
+              subtitle={`${movie?.vote_count} votes`}
+            />
+            <StatCard
+              title="Budget"
+              value={movie?.budget ? formatBudget(movie.budget) : "N/A"}
+            />
+            <StatCard
+              title="Revenue"
+              value={movie?.revenue ? formatBudget(movie.revenue) : "N/A"}
+            />
           </View>
 
-          <MovieInfo label="Overview" value={movie?.overview} />
-
-          <MovieInfo
-            label="Genres"
-            value={movie?.genres?.map((g) => g.name).join(" - ") || "N/A"}
+          {/* Overview */}
+          <InfoCard
+            label="Overview"
+            value={movie?.overview}
+            icon="document-text-outline"
           />
 
-          <View className="flex flex-row justify-between w-1/2">
-            <MovieInfo
-              label="Budget"
-              value={`$${movie?.budget / 1000000} million`}
-            />
-            <MovieInfo
-              label="Revenue"
-              value={`$${Math.round(movie?.revenue / 1000000)} million`}
-            />
-          </View>
+          {/* Production Companies */}
+          {movie?.production_companies &&
+            movie.production_companies.length > 0 && (
+              <InfoCard
+                label="Production Companies"
+                value={movie.production_companies
+                  .map((c) => c.name)
+                  .join(" • ")}
+                icon="business-outline"
+              />
+            )}
 
-          <MovieInfo
-            label="Production Comapanies"
-            value={
-              movie?.production_companies?.map((c) => c.name).join(" - ") ||
-              "N/A"
-            }
-          />
+          {/* Additional Info */}
+          <View className="flex-row gap-3">
+            <View className="flex-1">
+              <InfoCard
+                label="Language"
+                value={movie?.original_language?.toUpperCase()}
+                icon="language-outline"
+              />
+            </View>
+            <View className="flex-1">
+              <InfoCard
+                label="Status"
+                value={movie?.status}
+                icon="checkmark-circle-outline"
+              />
+            </View>
+          </View>
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
 
-      <TouchableOpacity className="absolute bottom-5 left-0 right-0 mx-5 bg-accent rounded-lg py-3.5 flex-row items-center justify-center z-50"
-      onPress={router.back}>
-        <Image
-          source={icons.arrow}
-          className="size-5 mr-1 mt-0.5 rotate-180"
-          tintColor="#fff"
-        />
-        <Text className="text-white font-semibold text-base">Go back</Text>
-      </TouchableOpacity>
+      {/* Floating Action Button */}
+      <View className="absolute bottom-5 left-5 right-5 flex-row gap-3">
+        <TouchableOpacity className="flex-1 bg-accent rounded-xl py-4 flex-row items-center justify-center shadow-lg">
+          <Ionicons name="play" size={20} color="white" />
+          <Text className="text-white font-bold text-base ml-2">
+            Watch Trailer
+          </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity className="bg-dark-100 rounded-xl py-4 px-6 flex-row items-center justify-center border border-accent/30">
+          <Ionicons name="bookmark-outline" size={20} color="#AB8BFF" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };

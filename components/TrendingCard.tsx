@@ -38,7 +38,7 @@ const TrendingCard = ({
           </View>
         </View>
 
-        {/* Display movie title with a maximum of one line */}
+        {/* Display movie title */}
         <Text className="text-sm font-bold text-white mt-2" numberOfLines={1}>
           {title}
         </Text>

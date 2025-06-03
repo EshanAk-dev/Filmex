@@ -1,20 +1,31 @@
-import { icons } from "@/constants/icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
 import React from "react";
-import { Image, View } from "react-native";
+import { Text, View } from "react-native";
 
-const TabIcon = ({ focused, icon, title }: any) => {
-  if (focused) {
-    return (
-      <View className="flex flex-col items-center justify-center px-10 py-5 bg-accent rounded-full">
-        <Image source={icon} tintColor="#FFFFFF" className="size-6" />
-      </View>
-    );
-  }
-
+const TabIcon = ({
+  focused,
+  iconName,
+  title,
+}: {
+  focused: boolean;
+  iconName: keyof typeof Ionicons.glyphMap;
+  title: string;
+}) => {
   return (
-    <View className="flex flex-col items-center justify-center">
-      <Image source={icon} tintColor="#9CA4AB" className="size-5" />
+    <View className="flex flex-col items-center justify-center py-2">
+      <Ionicons
+        name={iconName}
+        size={24}
+        color={focused ? "#AB8BFF" : "#9CA4AB"}
+      />
+      <Text
+        className={`text-xs mt-1 font-medium ${
+          focused ? "text-accent" : "text-light-300"
+        }`}
+      >
+        {title}
+      </Text>
     </View>
   );
 };
@@ -24,33 +35,30 @@ const _layout = () => {
     <Tabs
       screenOptions={{
         tabBarShowLabel: false,
-        tabBarItemStyle: {
-          flex: 1,
-          height: 56,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingVertical: 8,
-        },
         tabBarStyle: {
           backgroundColor: "#0F0D23",
-          borderRadius: 28,
-          marginHorizontal: 16,
-          marginBottom: 32,
-          height: 56,
+          height: 78,
+          paddingBottom: 8,
+          paddingTop: 8,
+          paddingHorizontal: 16,
           position: "absolute",
-          overflow: "hidden",
-          borderWidth: 1,
-          borderColor: "#221F3D",
-          paddingHorizontal: 8,
+          bottom: 0,
+          left: 0,
+          right: 0,
           shadowColor: "#000",
           shadowOffset: {
             width: 0,
-            height: 4,
+            height: -4,
           },
-          shadowOpacity: 0.3,
-          shadowRadius: 8,
-          elevation: 8,
-        }
+          shadowOpacity: 0.1,
+          shadowRadius: 12,
+          elevation: 16,
+        },
+        tabBarItemStyle: {
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        },
       }}
     >
       <Tabs.Screen
@@ -59,7 +67,7 @@ const _layout = () => {
           title: "Home",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon={icons.home} title="Home" />
+            <TabIcon focused={focused} iconName="home" title="Home" />
           ),
         }}
       />
@@ -69,7 +77,7 @@ const _layout = () => {
           title: "Search",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon={icons.search} title="Search" />
+            <TabIcon focused={focused} iconName="search" title="Search" />
           ),
         }}
       />
@@ -79,7 +87,7 @@ const _layout = () => {
           title: "Saved",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon={icons.save} title="Saved" />
+            <TabIcon focused={focused} iconName="bookmark" title="Saved" />
           ),
         }}
       />
@@ -89,7 +97,7 @@ const _layout = () => {
           title: "Profile",
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <TabIcon focused={focused} icon={icons.person} title="Profile" />
+            <TabIcon focused={focused} iconName="person" title="Profile" />
           ),
         }}
       />
