@@ -43,7 +43,7 @@ const TrendingCard = ({
           {title}
         </Text>
 
-        <View className="flex-row items-center justify-between mt-1">
+        <View className="flex-row items-center w-32 justify-between mt-1">
           <Text className="text-xs text-light-300 font-medium">
             {release_date?.split("-")[0] || "N/A"}
           </Text>

@@ -4,7 +4,7 @@ import TrendingCard from "@/components/TrendingCard";
 import { fetchMovies } from "@/services/api";
 import { getTrendingMovies } from "@/services/appwrite";
 import useFetch from "@/services/useFetch";
-import { LinearGradient } from 'expo-linear-gradient';
+import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import {
   ActivityIndicator,
@@ -32,7 +32,7 @@ export default function Index() {
   return (
     <View className="flex-1">
       <LinearGradient
-        colors={['#0F0D23', '#1A0E2E']}
+        colors={["#0F0D23", "#1A0E2E"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         className="flex-1"
@@ -97,12 +97,12 @@ export default function Index() {
                       </Text>
                     </View>
                   </View>
-                  
+
                   <FlatList
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     ItemSeparatorComponent={() => <View className="w-4" />}
-                    contentContainerStyle={{ paddingHorizontal: 2 }}
+                    contentContainerStyle={{ paddingEnd: 25 }}
                     data={trendingMovies}
                     renderItem={({ item, index }) => (
                       <TrendingCard movie={item} index={index} />
@@ -132,10 +132,10 @@ export default function Index() {
                   numColumns={3}
                   columnWrapperStyle={{
                     justifyContent: "center",
-                    gap: 12,
+                    gap: 14,
                     marginBottom: 16,
                   }}
-                  contentContainerStyle={{ paddingBottom: 120 }}
+                  contentContainerStyle={{ paddingBottom: 100 }}
                   scrollEnabled={false} // Let ScrollView handle scrolling
                 />
               </View>

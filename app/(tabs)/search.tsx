@@ -3,6 +3,7 @@ import SearchBar from "@/components/SearchBar";
 import { fetchMovies } from "@/services/api";
 import { updateSearchCount } from "@/services/appwrite";
 import useFetch from "@/services/useFetch";
+import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
@@ -42,101 +43,109 @@ const Search = () => {
   }, [movies]);
 
   return (
-    <View className="flex-1 bg-primary">
-      <FlatList
-        data={movies}
-        renderItem={({ item }) => <MovieCard {...item} />}
-        keyExtractor={(item) => item.id.toString()}
-        className="px-6"
-        numColumns={3}
-        columnWrapperStyle={{
-          justifyContent: "center",
-          marginBottom: 20,
-          gap: 16,
-        }}
-        contentContainerStyle={{
-          paddingBottom: 100,
-        }}
-        ListHeaderComponent={
-          <View>
-            {/* Header */}
-            <View className="pt-16 pb-8">
-              <Text className="text-2xl text-white font-bold mb-2">
-                Search Movies
-              </Text>
-              <Text className="text-light-300 text-base mb-6">
-                Find your next favorite movie
-              </Text>
-              
-              <SearchBar
-                value={searchQuery}
-                onChangeText={(text) => setSearchQuery(text)}
-                placeholder="Search movies, actors, genres..."
-              />
-            </View>
+    <View className="flex-1">
+      <LinearGradient
+        colors={["#0F0D23", "#1A0E2E"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        className="flex-1"
+      >
+        <FlatList
+          data={movies}
+          renderItem={({ item }) => <MovieCard {...item} />}
+          keyExtractor={(item) => item.id.toString()}
+          className="px-6"
+          numColumns={3}
+          columnWrapperStyle={{
+            justifyContent: "center",
+            marginBottom: 20,
+            gap: 16,
+          }}
+          contentContainerStyle={{
+            paddingBottom: 100,
+          }}
+          ListHeaderComponent={
+            <View>
+              {/* Header */}
+              <View className="pt-16 pb-8">
+                <Text className="text-2xl text-white font-bold mb-2">
+                  Search Movies
+                </Text>
+                <Text className="text-light-300 text-base mb-6">
+                  Find your next favorite movie
+                </Text>
 
-            {/* Loading */}
-            {loading && (
-              <View className="items-center py-8">
-                <ActivityIndicator size="large" color="#AB8BFF" />
-                <Text className="text-light-300 text-sm mt-3">
-                  Searching...
-                </Text>
+                <SearchBar
+                  value={searchQuery}
+                  onChangeText={(text) => setSearchQuery(text)}
+                  placeholder="Search movies, actors, genres..."
+                />
               </View>
-            )}
 
-            {/* Error */}
-            {error && (
-              <View className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mx-1 my-4">
-                <Text className="text-red-400 font-semibold mb-1">
-                  Search Error
-                </Text>
-                <Text className="text-red-300 text-sm">
-                  {error.message}
-                </Text>
-              </View>
-            )}
-
-            {/* Results Header */}
-            {!loading && !error && searchQuery.trim() && movies?.length > 0 && (
-              <View className="mb-6">
-                <Text className="text-white text-lg font-semibold">
-                  Results for "{searchQuery}"
-                </Text>
-                <Text className="text-light-300 text-sm">
-                  {movies.length} movies found
-                </Text>
-              </View>
-            )}
-          </View>
-        }
-        ListEmptyComponent={
-          !loading && !error ? (
-            <View className="items-center py-12">
-              {searchQuery.trim() ? (
-                <View className="items-center">
-                  <Text className="text-white text-lg font-semibold mb-2">
-                    No movies found
-                  </Text>
-                  <Text className="text-light-300 text-sm text-center">
-                    Try different keywords or check spelling
-                  </Text>
-                </View>
-              ) : (
-                <View className="items-center">
-                  <Text className="text-white text-lg font-semibold mb-2">
-                    Search for movies
-                  </Text>
-                  <Text className="text-light-300 text-sm text-center">
-                    Enter a movie title, actor, or genre above
+              {/* Loading */}
+              {loading && (
+                <View className="items-center py-8">
+                  <ActivityIndicator size="large" color="#AB8BFF" />
+                  <Text className="text-light-300 text-sm mt-3">
+                    Searching...
                   </Text>
                 </View>
               )}
+
+              {/* Error */}
+              {error && (
+                <View className="bg-red-500/10 border border-red-500/20 rounded-xl p-4 mx-1 my-4">
+                  <Text className="text-red-400 font-semibold mb-1">
+                    Search Error
+                  </Text>
+                  <Text className="text-red-300 text-sm">{error.message}</Text>
+                </View>
+              )}
+
+              {/* Results Header */}
+              {!loading &&
+                !error &&
+                searchQuery.trim() &&
+                movies?.length > 0 && (
+                  <View className="mb-6">
+                    <Text className="text-white text-lg font-semibold">
+                      Results for "{searchQuery}"
+                    </Text>
+                    <Text className="text-light-300 text-sm">
+                      {movies.length} movies found
+                    </Text>
+                  </View>
+                )}
             </View>
-          ) : null
-        }
-        showsVerticalScrollIndicator={false}
-      />
+          }
+          ListEmptyComponent={
+            !loading && !error ? (
+              <View className="items-center py-12">
+                {searchQuery.trim() ? (
+                  <View className="items-center">
+                    <Text className="text-white text-lg font-semibold mb-2">
+                      No movies found
+                    </Text>
+                    <Text className="text-light-300 text-sm text-center">
+                      Try different keywords or check spelling
+                    </Text>
+                  </View>
+                ) : (
+                  <View className="items-center">
+                    <Text className="text-white text-lg font-semibold mb-2">
+                      Search for movies
+                    </Text>
+                    <Text className="text-light-300 text-sm text-center">
+                      Enter a movie title, actor, or genre above
+                    </Text>
+                  </View>
+                )}
+              </View>
+            ) : null
+          }
+          showsVerticalScrollIndicator={false}
+        />
+      </LinearGradient>
     </View>
   );
 };
