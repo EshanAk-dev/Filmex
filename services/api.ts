@@ -8,10 +8,18 @@ export const TMDB_CONFIG = {
 };
 
 // Fetch movies with search option
-export const fetchMovies = async ({ query }: { query: string }) => {
+export const fetchMovies = async ({
+  query,
+  page = 1,
+}: {
+  query: string;
+  page?: number;
+}) => {
   const endpoint = query
-    ? `${TMDB_CONFIG.BASE_URL}/search/movie?query=${encodeURIComponent(query)}` // If a query is provided, search for movies
-    : `${TMDB_CONFIG.BASE_URL}/discover/movie?sort_by=popularity.desc`; // If no query, fetch popular movies
+    ? `${TMDB_CONFIG.BASE_URL}/search/movie?query=${encodeURIComponent(
+        query
+      )}&page=${page}`
+    : `${TMDB_CONFIG.BASE_URL}/discover/movie?sort_by=popularity.desc&page=${page}`;
 
   const response = await fetch(endpoint, {
     method: "GET",
@@ -19,8 +27,7 @@ export const fetchMovies = async ({ query }: { query: string }) => {
   });
 
   if (!response.ok) {
-    // @ts-ignore
-    throw new Error("Failed to fetch movies", response.statusText);
+    throw new Error("Failed to fetch movies");
   }
 
   const data = await response.json();

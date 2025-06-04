@@ -43,7 +43,7 @@ const Profile = () => {
           try {
             await signOut();
             setUser(null);
-            router.replace("/auth/login");
+            router.replace("/(tabs)/profile");
           } catch (error: any) {
             Alert.alert("Error", error.message);
           }
