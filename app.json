@@ -17,7 +17,13 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.eshanakdev.filmex_movie_app"
+      "package": "com.eshanakdev.filmex_movie_app",
+      "splash": {
+        "backgroundColor": "#ffffff",
+        "resizeMode": "contain",
+        "image": "./assets/icons/logo_white_bg.png",
+        "imageWidth": 200
+      }
     },
     "web": {
       "bundler": "metro",
@@ -29,7 +35,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/icons/logo.png",
+          "image": "./assets/icons/logo_white_bg.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"

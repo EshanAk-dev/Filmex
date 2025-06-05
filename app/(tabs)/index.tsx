@@ -4,10 +4,17 @@ import TrendingCard from "@/components/TrendingCard";
 import { fetchMovies } from "@/services/api";
 import { getTrendingMovies } from "@/services/appwrite";
 import useFetch from "@/services/useFetch";
+import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function Index() {
   const router = useRouter();
@@ -58,7 +65,7 @@ export default function Index() {
       <View className="mb-8 pt-16">
         <Text className="text-4xl text-white font-bold mb-2">FILMEX</Text>
         <Text className="text-light-300 text-base font-medium">
-          Find your next favorite movie
+          Discover, watch, and love the best movies.
         </Text>
       </View>
 
@@ -153,13 +160,28 @@ export default function Index() {
                   {moviesLoading ? (
                     <ActivityIndicator size="small" color="#AB8BFF" />
                   ) : (
-                    <Text
-                      className="text-accent text-sm font-semibold"
+                    <TouchableOpacity
                       onPress={handleLoadMore}
-                      style={{ textAlign: "center", marginTop: 8 }}
+                      style={{ marginTop: 8 }}
                     >
-                      Load More
-                    </Text>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Ionicons
+                          name="reload-outline"
+                          size={14}
+                          color="#AB8BFF"
+                          style={{ marginRight: 5 }}
+                        />
+                        <Text className="text-accent text-sm font-semibold">
+                          Load More
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
                   )}
                 </View>
               )

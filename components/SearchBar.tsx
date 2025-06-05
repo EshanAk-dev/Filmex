@@ -4,7 +4,7 @@ import { StyleSheet, TextInput, View } from "react-native";
 
 interface Props {
   placeholder: string;
-  value?: string; // In thi ? make these optional
+  value?: string; // In this ? make these optional
   onPress?: () => void;
   onChangeText?: (text: string) => void;
 } // Tells whats are the types of props

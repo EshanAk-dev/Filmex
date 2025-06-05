@@ -96,7 +96,7 @@ const CustomSnackbar: React.FC<SnackbarProps> = ({
     <Animated.View
       style={{
         position: "absolute",
-        top: 60,
+        top: 50,
         left: 16,
         right: 16,
         transform: [{ translateY }],

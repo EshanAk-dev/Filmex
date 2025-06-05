@@ -1,4 +1,8 @@
+// Updated [id].tsx with save functionality
 import placeholderImage from "@/assets/images/placeholder.png";
+import CustomSnackbar from "@/components/CustomSnackbar";
+import { useAuth } from "@/context/AuthContext";
+import { useSavedMovies } from "@/context/SavedMoviesContext";
 import { fetchMovieDetails } from "@/services/api";
 import useFetch from "@/services/useFetch";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,8 +14,6 @@ import {
   Animated,
   Dimensions,
   Image,
-  StatusBar,
-  StyleSheet,
   Text,
   TouchableOpacity,
   View,
@@ -69,6 +71,26 @@ const MovieDetails = () => {
     fetchMovieDetails(id as string)
   );
 
+  const { isLoggedIn } = useAuth();
+  const { saveMovieHandler, removeSavedMovieHandler, isMovieSavedHandler } =
+    useSavedMovies();
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Snackbar state
+  const [snackbar, setSnackbar] = useState({
+    visible: false,
+    message: "",
+    type: "info" as "success" | "error" | "info",
+  });
+
+  const showSnackbar = (
+    message: string,
+    type: "success" | "error" | "info" = "info"
+  ) => {
+    setSnackbar({ visible: true, message, type });
+  };
+
   const headerOpacity = scrollY.interpolate({
     inputRange: [0, 200],
     outputRange: [0, 1],
@@ -88,6 +110,37 @@ const MovieDetails = () => {
     return `$${(budget / 1000).toFixed(0)}K`;
   };
 
+  // Handle saving/removing movie from collection
+  const handleSaveMovie = async () => {
+    if (!isLoggedIn) {
+      showSnackbar("Please log in to save movies to your collection.", "error");
+      return;
+    }
+
+    if (!movie) return;
+
+    setIsSaving(true);
+    try {
+      const movieIsSaved = isMovieSavedHandler(movie.id);
+
+      if (movieIsSaved) {
+        await removeSavedMovieHandler(movie.id);
+        showSnackbar("Movie removed from your saved collection!", "success");
+      } else {
+        await saveMovieHandler(movie);
+        showSnackbar("Movie saved to your collection!", "success");
+      }
+    } catch (error: any) {
+      if (error.message === "Movie is already saved") {
+        showSnackbar("This movie is already in your saved collection!", "info");
+      } else {
+        showSnackbar("Failed to save movie. Please try again.", "error");
+      }
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <View className="flex-1 bg-primary items-center justify-center">
@@ -99,14 +152,17 @@ const MovieDetails = () => {
     );
   }
 
+  const movieIsSaved = movie ? isMovieSavedHandler(movie.id) : false;
+
   return (
     <View className="bg-primary flex-1">
-      <StatusBar
-        barStyle="light-content"
-        translucent
-        backgroundColor="transparent"
+      {/* Snackbar */}
+      <CustomSnackbar
+        visible={snackbar.visible}
+        message={snackbar.message}
+        type={snackbar.type}
+        onHide={() => setSnackbar({ ...snackbar, visible: false })}
       />
-
       {/* Header */}
       <Animated.View
         style={{ opacity: headerOpacity }}
@@ -167,9 +223,21 @@ const MovieDetails = () => {
             <Ionicons name="arrow-back" size={20} color="white" />
           </TouchableOpacity>
 
-          {/* Bookmark Button */}
-          <TouchableOpacity className="absolute top-12 right-5 bg-black/50 rounded-full p-3">
-            <Ionicons name="bookmark-outline" size={20} color="white" />
+          {/* Save/Bookmark Button */}
+          <TouchableOpacity
+            onPress={handleSaveMovie}
+            disabled={isSaving}
+            className="absolute top-12 right-5 bg-black/50 rounded-full p-3"
+          >
+            {isSaving ? (
+              <ActivityIndicator size={20} color="white" />
+            ) : (
+              <Ionicons
+                name={movieIsSaved ? "bookmark" : "bookmark-outline"}
+                size={20}
+                color={movieIsSaved ? "#AB8BFF" : "white"}
+              />
+            )}
           </TouchableOpacity>
         </View>
 
@@ -285,8 +353,24 @@ const MovieDetails = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="bg-dark-100 rounded-xl py-4 px-6 flex-row items-center justify-center border border-accent/30">
-          <Ionicons name="bookmark-outline" size={20} color="#AB8BFF" />
+        <TouchableOpacity
+          onPress={handleSaveMovie}
+          disabled={isSaving}
+          className={`rounded-xl py-4 px-6 flex-row items-center justify-center border ${
+            movieIsSaved
+              ? "bg-accent/20 border-accent"
+              : "bg-dark-100 border-accent/30"
+          }`}
+        >
+          {isSaving ? (
+            <ActivityIndicator size={20} color="#AB8BFF" />
+          ) : (
+            <Ionicons
+              name={movieIsSaved ? "bookmark" : "bookmark-outline"}
+              size={20}
+              color="#AB8BFF"
+            />
+          )}
         </TouchableOpacity>
       </View>
     </View>
@@ -294,5 +378,3 @@ const MovieDetails = () => {
 };
 
 export default MovieDetails;
-
-const styles = StyleSheet.create({});
