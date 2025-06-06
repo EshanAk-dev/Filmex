@@ -1,6 +1,6 @@
 # 🎬 Filmex
 
-**Filmex** is a sleek **React Native** mobile app built with **TypeScript**, allowing users to **browse**, **search**, and **save movies**. Powered by **TMDB API** for real-time movie data and **Appwrite** for user authentication and data storage, CineScope delivers a personalized movie discovery experience right on your phone.
+**Filmex** is a sleek **React Native** mobile app built with **TypeScript**, allowing users to **browse**, **search**, and **save movies**. Powered by **TMDB API** for real-time movie data and **Appwrite** for authentication and storage, Filmex offers a personalized movie discovery experience — enhanced by a custom trending engine that tracks user interest.
 
 ---
 
@@ -11,6 +11,7 @@
 * ⚛️ React Native
 * 🟦 TypeScript
 * 🔐 React Navigation
+* 🌀 NativeWind (Tailwind CSS for React Native)
 * 📦 Appwrite (Auth + Database)
 * 🎬 TMDB API (movie metadata)
 
@@ -23,10 +24,17 @@
 * Browse trending, latest, and top-rated movies
 * Search movies by title in real-time
 * Genre filtering
-* Infinite scroll for movie lists  
+* Infinite scroll for smooth browsing
 * View detailed movie info (overview, ratings, release date, etc.)
-* Save favorite movies to your account
-* Fully mobile-responsive with a modern UI
+* Save favorite movies to user account
+* Fully mobile-responsive with modern UI styled using **NativeWind**
+
+### 🔥 Trending Engine (Custom Feature)
+
+* Tracks user search terms and associated movies in **Appwrite**
+* Implements logic to:
+  * Count repeated searches and store metadata (title, poster, rating, etc.)
+  * Automatically identify and display **trending movies** based on most-searched terms
 
 ### 🔐 Auth & Storage
 
