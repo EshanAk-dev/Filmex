@@ -1,50 +1,36 @@
-# Welcome to your Expo app 👋
+# 🎬 Filmex
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Filmex** is a sleek **React Native** mobile app built with **TypeScript**, allowing users to **browse**, **search**, and **save movies**. Powered by **TMDB API** for real-time movie data and **Appwrite** for user authentication and data storage, CineScope delivers a personalized movie discovery experience right on your phone.
 
-## Get started
+---
 
-1. Install dependencies
+## 🧰 Tech Stack
 
-   ```bash
-   npm install
-   ```
+### Mobile App
 
-2. Start the app
+* ⚛️ React Native
+* 🟦 TypeScript
+* 🔐 React Navigation
+* 📦 Appwrite (Auth + Database)
+* 🎬 TMDB API (movie metadata)
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+## ✨ Features
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### 🎥 User Experience
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+* Browse trending, latest, and top-rated movies
+* Search movies by title in real-time
+* Genre filtering
+* Infinite scroll for movie lists  
+* View detailed movie info (overview, ratings, release date, etc.)
+* Save favorite movies to your account
+* Fully mobile-responsive with a modern UI
 
-## Get a fresh project
+### 🔐 Auth & Storage
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+* User sign-up & login (via Appwrite)
+* Secure user sessions
+* Save and fetch favorites linked to user profiles
+* Appwrite database integration for saved movie entries
