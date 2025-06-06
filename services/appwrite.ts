@@ -53,7 +53,7 @@ export const updateSearchCount = async (query: string, movie: Movie) => {
 export const getTrendingMovies = async (): Promise<TrendingMovie[] | undefined> => {
   try {
     const result = await database.listDocuments(DATABASE_ID, COLLECTION_ID, [
-      Query.limit(10),
+      Query.limit(15),
       Query.orderDesc("count"), // Display top search count movies
     ]);
 

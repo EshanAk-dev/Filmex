@@ -1,7 +1,5 @@
-import bg from "@/assets/images/bg.png";
-import rankingGradient from "@/assets/images/rankingGradient.png";
+import placeholderImage from "@/assets/images/placeholder.png";
 
 export const images = {
-  bg,
-  rankingGradient,
+  placeholderImage,
 };

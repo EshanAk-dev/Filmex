@@ -1,5 +1,5 @@
 import placeholderImage from "@/assets/images/placeholder.png";
-import { icons } from "@/constants/icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
@@ -26,14 +26,15 @@ const TrendingCard = ({
           />
 
           {/* Vote Average Badge */}
-          <View className="absolute top-2 -right-3 bg-black/70 rounded-full px-2 py-1 flex-row items-center">
-            <Image
-              source={icons.star}
-              className="size-3 mr-1"
-              tintColor="#FFD700"
+          <View className="absolute top-2 -right-3 bg-black/70 rounded-full px-2 py-0.5 flex-row items-center">
+            <Ionicons
+              name="star"
+              size={10}
+              color="#FFD700"
+              style={{ marginRight: 4 }}
             />
-            <Text className="text-xs text-white font-bold">
-              {vote_average?.toFixed(1) || "N/A"}
+            <Text className="text-xs text-white font-bold mt-0.5">
+              {vote_average.toFixed(1)}
             </Text>
           </View>
         </View>

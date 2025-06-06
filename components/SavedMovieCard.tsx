@@ -1,4 +1,4 @@
-import { icons } from "@/constants/icons";
+import { images } from "@/constants/images";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
@@ -21,7 +21,7 @@ const SavedMovieCard = ({
         source={
           movie.posterPath
             ? { uri: `https://image.tmdb.org/t/p/w200${movie.posterPath}` }
-            : icons.save
+            : images.placeholderImage
         }
         className="w-24 h-30 rounded-lg"
         resizeMode="cover"
@@ -42,7 +42,7 @@ const SavedMovieCard = ({
 
         <View className="flex-row items-center mb-2">
           <Ionicons name="star" size={12} color="#AB8BFF" />
-          <Text className="text-accent text-xs ml-1">
+          <Text className="text-accent text-xs ml-1 pt-1">
             {movie.voteAverage?.toFixed(1)}/10
           </Text>
         </View>

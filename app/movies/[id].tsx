@@ -286,9 +286,9 @@ const MovieDetails = () => {
                 </Text>
               </View>
 
-              <View className="flex-row items-center bg-accent/20 rounded-full px-3 py-1">
-                <Ionicons name="star" size={14} color="#AB8BFF" />
-                <Text className="text-accent font-bold text-sm ml-1">
+              <View className="flex-row items-center bg-accent/20 rounded-full px-3 pb-1">
+                <Ionicons name="star" size={12} color="#AB8BFF" className="mt-0.5" />
+                <Text className="text-accent font-bold text-sm ml-1 mt-1.5">
                   {movie?.vote_average?.toFixed(1)}/10
                 </Text>
               </View>
