@@ -1,7 +1,7 @@
 import MovieCard from "@/components/MovieCard";
 import SearchBar from "@/components/SearchBar";
 import TrendingCard from "@/components/TrendingCard";
-import { fetchMovies } from "@/services/api";
+import { fetchGenres, fetchMovies } from "@/services/api";
 import { getTrendingMovies } from "@/services/appwrite";
 import useFetch from "@/services/useFetch";
 import { Ionicons } from "@expo/vector-icons";
@@ -11,6 +11,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -25,6 +26,13 @@ export default function Index() {
     loading: trendingLoading,
     error: trendingError,
   } = useFetch(getTrendingMovies);
+
+  // Genres
+  const {
+    data: genres,
+    loading: genresLoading,
+    error: genresError,
+  } = useFetch(fetchGenres);
 
   // Pagination state for movies
   const [movies, setMovies] = useState<any[]>([]);
@@ -58,6 +66,13 @@ export default function Index() {
     }
   };
 
+  // Handle genre selection
+  const handleGenrePress = (genre: Genre) => {
+    router.push(
+      `/genre/${genre.id}?genreName=${encodeURIComponent(genre.name)}`
+    );
+  };
+
   // Header and trending section as a component
   const renderListHeader = () => (
     <View>
@@ -76,6 +91,33 @@ export default function Index() {
           placeholder="Search for movies, genres, actors..."
         />
       </View>
+
+      {/* Genres Section */}
+      {genres && genres.length > 0 && (
+        <View className="mb-8">
+          <Text className="text-lg text-white font-bold mb-4">
+            Browse by Genre
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingEnd: 25 }}
+          >
+            {genres.slice(0, 15).map((genre) => (
+              <TouchableOpacity
+                key={genre.id}
+                onPress={() => handleGenrePress(genre)}
+                className="bg-accent/20 px-4 py-2 rounded-full mr-2.5"
+                style={{ borderWidth: 1, borderColor: "#AB8BFF40" }}
+              >
+                <Text className="text-accent text-sm font-semibold">
+                  {genre.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+      )}
 
       {/* Trending Section */}
       {trendingMovies && trendingMovies.length > 0 && (
@@ -120,21 +162,25 @@ export default function Index() {
         end={{ x: 1, y: 1 }}
         className="flex-1"
       >
-        {(moviesLoading && movies.length === 0) || trendingLoading ? (
+        {(moviesLoading && movies.length === 0) ||
+        trendingLoading ||
+        genresLoading ? (
           <View className="flex-1 items-center justify-center mt-32">
             <ActivityIndicator size="large" color="#AB8BFF" className="mb-3" />
             <Text className="text-light-300 text-base font-medium">
               Loading movies...
             </Text>
           </View>
-        ) : moviesError || trendingError ? (
+        ) : moviesError || trendingError || genresError ? (
           <View className="flex-1 items-center justify-center mt-32 px-8">
             <View className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 w-full">
               <Text className="text-red-400 text-center text-lg font-semibold mb-2">
                 Oops! Something went wrong
               </Text>
               <Text className="text-red-300 text-center text-sm">
-                {moviesError?.message || trendingError?.message}
+                {moviesError?.message ||
+                  trendingError?.message ||
+                  genresError?.message}
               </Text>
             </View>
           </View>

@@ -57,3 +57,43 @@ export const fetchMovieDetails = async (
     throw error;
   }
 };
+
+// Fetch movies by genre
+export const fetchMoviesByGenre = async ({
+  genreId,
+  page = 1,
+}: {
+  genreId: number;
+  page?: number;
+}) => {
+  const endpoint = `${TMDB_CONFIG.BASE_URL}/discover/movie?with_genres=${genreId}&page=${page}`;
+
+  const response = await fetch(endpoint, {
+    method: "GET",
+    headers: TMDB_CONFIG.headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch movies by genre");
+  }
+
+  const data = await response.json();
+  return data.results;
+};
+
+// Fetch all genres
+export const fetchGenres = async (): Promise<Genre[]> => {
+  const endpoint = `${TMDB_CONFIG.BASE_URL}/genre/movie/list`;
+
+  const response = await fetch(endpoint, {
+    method: "GET",
+    headers: TMDB_CONFIG.headers,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch genres");
+  }
+
+  const data = await response.json();
+  return data.genres;
+};

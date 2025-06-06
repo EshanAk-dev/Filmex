@@ -67,9 +67,9 @@ const CustomSnackbar: React.FC<SnackbarProps> = ({
   const getBackgroundColor = () => {
     switch (type) {
       case "success":
-        return "#4ECDC4";
+        return "#22C55E";
       case "error":
-        return "#FF6B6B";
+        return "#F43F5E";
       case "info":
         return "#AB8BFF";
       default:
@@ -96,7 +96,7 @@ const CustomSnackbar: React.FC<SnackbarProps> = ({
     <Animated.View
       style={{
         position: "absolute",
-        top: 50,
+        top: 42,
         left: 16,
         right: 16,
         transform: [{ translateY }],

@@ -1,4 +1,3 @@
-// Updated [id].tsx with save functionality
 import placeholderImage from "@/assets/images/placeholder.png";
 import CustomSnackbar from "@/components/CustomSnackbar";
 import { useAuth } from "@/context/AuthContext";
@@ -141,6 +140,11 @@ const MovieDetails = () => {
     }
   };
 
+  const handleTrailerPress = () => {
+    showSnackbar("Sorry, No trailer available.", "error");
+    return;
+  };
+
   if (loading) {
     return (
       <View className="flex-1 bg-primary items-center justify-center">
@@ -163,7 +167,7 @@ const MovieDetails = () => {
         type={snackbar.type}
         onHide={() => setSnackbar({ ...snackbar, visible: false })}
       />
-      {/* Header */}
+      {/* Header when scroll down */}
       <Animated.View
         style={{ opacity: headerOpacity }}
         className="absolute top-0 left-0 right-0 z-20 bg-primary/95 pt-12 pb-4 px-5 border-b border-dark-100"
@@ -175,12 +179,29 @@ const MovieDetails = () => {
           >
             <Ionicons name="arrow-back" size={20} color="white" />
           </TouchableOpacity>
+
           <Text
             className="text-white font-bold text-lg flex-1 ml-4"
             numberOfLines={1}
           >
             {movie?.title}
           </Text>
+
+          <TouchableOpacity
+            onPress={handleSaveMovie}
+            disabled={isSaving}
+            className="bg-dark-100/80 rounded-full p-2"
+          >
+            {isSaving ? (
+              <ActivityIndicator size={20} color="white" />
+            ) : (
+              <Ionicons
+                name={movieIsSaved ? "bookmark" : "bookmark-outline"}
+                size={20}
+                color={movieIsSaved ? "#AB8BFF" : "white"}
+              />
+            )}
+          </TouchableOpacity>
         </View>
       </Animated.View>
 
@@ -346,7 +367,10 @@ const MovieDetails = () => {
 
       {/* Floating Action Button */}
       <View className="absolute bottom-5 left-5 right-5 flex-row gap-3">
-        <TouchableOpacity className="flex-1 bg-accent rounded-xl py-4 flex-row items-center justify-center shadow-lg">
+        <TouchableOpacity
+          onPress={handleTrailerPress}
+          className="flex-1 bg-accent rounded-xl py-4 flex-row items-center justify-center shadow-lg"
+        >
           <Ionicons name="play" size={20} color="white" />
           <Text className="text-white font-bold text-base ml-2">
             Watch Trailer

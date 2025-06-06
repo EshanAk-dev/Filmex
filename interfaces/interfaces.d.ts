@@ -90,3 +90,8 @@ interface SavedMovie {
   overview: string;
   savedAt: string;
 }
+
+interface Genre {
+  id: number;
+  name: string;
+}
