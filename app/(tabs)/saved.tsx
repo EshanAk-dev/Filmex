@@ -30,6 +30,15 @@ const Saved = () => {
     }
   };
 
+  // Group movies into groups of 3 for 3 columns
+  const groupMoviesInThrees = (movies: any[]) => {
+    const groups = [];
+    for (let i = 0; i < movies.length; i += 3) {
+      groups.push(movies.slice(i, i + 3));
+    }
+    return groups;
+  };
+
   if (!isLoggedIn) {
     return (
       <View className="bg-primary flex-1 px-10">
@@ -84,6 +93,8 @@ const Saved = () => {
     );
   }
 
+  const movieGroups = groupMoviesInThrees(savedMovies);
+
   return (
     <View className="flex-1">
       <LinearGradient
@@ -115,13 +126,23 @@ const Saved = () => {
 
         {/* Saved Movies List */}
         <FlatList
-          data={savedMovies}
-          renderItem={({ item }) => (
-            <SavedMovieCard movie={item} onRemove={handleRemoveMovie} />
+          data={movieGroups}
+          renderItem={({ item: group }) => (
+            <View className="flex-row px-4">
+              <SavedMovieCard movie={group[0]} onRemove={handleRemoveMovie} />
+              {group[1] && (
+                <SavedMovieCard movie={group[1]} onRemove={handleRemoveMovie} />
+              )}
+              {group[2] && (
+                <SavedMovieCard movie={group[2]} onRemove={handleRemoveMovie} />
+              )}
+
+              {!group[1] && <View className="flex-1 mx-1" />}
+              {!group[2] && <View className="flex-1 mx-1" />}
+            </View>
           )}
-          keyExtractor={(item) => item.$id || item.movieId.toString()}
+          keyExtractor={(item, index) => `group-${index}`}
           contentContainerStyle={{
-            paddingHorizontal: 24,
             paddingBottom: 120,
           }}
           showsVerticalScrollIndicator={false}

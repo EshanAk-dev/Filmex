@@ -10,57 +10,89 @@ const SavedMovieCard = ({
 }: {
   movie: any;
   onRemove: (movieId: number) => void;
-}) => (
-  <TouchableOpacity
-    onPress={() => router.push(`/movies/${movie.movieId}`)}
-    className="bg-dark-100/50 rounded-xl mb-4 border border-dark-100 overflow-hidden"
-  >
-    <View className="flex-row">
-      {/* Movie Poster */}
-      <Image
-        source={
-          movie.posterPath
-            ? { uri: `https://image.tmdb.org/t/p/w200${movie.posterPath}` }
-            : images.placeholderImage
-        }
-        className="w-24 h-30 rounded-lg"
-        resizeMode="cover"
-      />
+}) => {
+  const formatSavedTime = (savedAt: string) => {
+    const date = new Date(savedAt);
+    const now = new Date();
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60)
+    );
+
+    if (diffInMinutes < 1) {
+      return "Just now";
+    } else if (diffInMinutes < 60) {
+      return `${diffInMinutes}m ago`;
+    } else if (diffInMinutes < 1440) {
+      const hours = Math.floor(diffInMinutes / 60);
+      return `${hours}h ago`;
+    } else {
+      const days = Math.floor(diffInMinutes / 1440);
+      return `${days}d ago`;
+    }
+  };
+
+  return (
+    <TouchableOpacity
+      onPress={() => router.push(`/movies/${movie.movieId}`)}
+      className="bg-dark-100/50 rounded-xl border border-dark-100 overflow-hidden flex-1 mx-1 mb-4"
+    >
+      {/* Movie Poster with Remove Button */}
+      <View className="relative">
+        <Image
+          source={
+            movie.posterPath
+              ? { uri: `https://image.tmdb.org/t/p/w300${movie.posterPath}` }
+              : images.placeholderImage
+          }
+          className="w-full h-40 rounded-t-xl"
+          resizeMode="cover"
+        />
+
+        {/* Remove Button */}
+        <TouchableOpacity
+          onPress={(e) => {
+            e.stopPropagation();
+            onRemove(movie.movieId);
+          }}
+          className="absolute top-2 right-2 bg-black/70 rounded-full p-1.5"
+        >
+          <Ionicons name="trash-outline" size={12} color="#ff6b6b" />
+        </TouchableOpacity>
+      </View>
 
       {/* Movie Info */}
-      <View className="flex-1 p-4">
-        <Text className="text-white font-bold text-base mb-2" numberOfLines={2}>
+      <View className="p-2">
+        <Text className="text-white font-bold text-xs mb-1.5" numberOfLines={1}>
           {movie.title}
         </Text>
 
-        <View className="flex-row items-center mb-2">
-          <Ionicons name="calendar-outline" size={12} color="#9CA4AB" />
+        {/* Release Date and Vote Average */}
+        <View className="flex-row items-center justify-between mb-1">
+          <View className="flex-row items-center">
+            <Ionicons name="calendar-outline" size={8} color="#9CA4AB" />
+            <Text className="text-light-300 text-xs ml-1">
+              {movie.releaseDate?.split("-")[0]}
+            </Text>
+          </View>
+
+          <View className="flex-row items-center">
+            <Ionicons name="star" size={8} color="#AB8BFF" />
+            <Text className="text-accent text-xs ml-1">
+              {movie.voteAverage?.toFixed(1)}
+            </Text>
+          </View>
+        </View>
+
+        {/* Saved Time */}
+        <View className="flex-row items-center">
+          <Ionicons name="time-outline" size={8} color="#9CA4AB" />
           <Text className="text-light-300 text-xs ml-1">
-            {movie.releaseDate?.split("-")[0]}
+            {formatSavedTime(movie.savedAt)}
           </Text>
         </View>
-
-        <View className="flex-row items-center mb-2">
-          <Ionicons name="star" size={12} color="#AB8BFF" />
-          <Text className="text-accent text-xs ml-1 pt-1">
-            {movie.voteAverage?.toFixed(1)}/10
-          </Text>
-        </View>
-
-        <Text className="text-light-300 text-xs" numberOfLines={2}>
-          {movie.overview}
-        </Text>
       </View>
-
-      {/* Remove Button */}
-      <TouchableOpacity
-        onPress={() => onRemove(movie.movieId)}
-        className="p-3 justify-center"
-      >
-        <Ionicons name="trash-outline" size={18} color="#ff6b6b" />
-      </TouchableOpacity>
-    </View>
-  </TouchableOpacity>
-);
+    </TouchableOpacity>
+  );
+};
 
 export default SavedMovieCard;
